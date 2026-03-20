@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Protocol, TYPE_CHECKING
 
 import hashlib
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from origin_protocol_core.canonical import canonical_json
 
 from .key_management import derive_key_id
@@ -56,7 +57,6 @@ def audit_and_sign_attestation(
     """Load, verify, build, sign, and persist a signed attestation for a run."""
     from .payloads import build_attestation_payload
     from .verification import verify_run_or_raise
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
     manifests = chain_store.list_run(run_id)
     verify_run_or_raise(run_id, manifests)

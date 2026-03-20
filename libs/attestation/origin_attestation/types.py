@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from .payloads import AttestationPayload
 
@@ -17,7 +18,7 @@ class SignedAttestation:
     key_id: str
     signed_fields_sha256: str
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "payload": self.payload.to_dict(),
             "signature": self.signature,
@@ -27,11 +28,16 @@ class SignedAttestation:
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> "SignedAttestation":
-        return cls(
-            payload=AttestationPayload.from_dict(data["payload"]),
-            signature=data["signature"],
-            signature_alg=data["signature_alg"],
-            key_id=data["key_id"],
-            signed_fields_sha256=data["signed_fields_sha256"],
-        )
+    def from_dict(cls, data: dict[str, Any]) -> "SignedAttestation":
+        try:
+            return cls(
+                payload=AttestationPayload.from_dict(data["payload"]),
+                signature=data["signature"],
+                signature_alg=data["signature_alg"],
+                key_id=data["key_id"],
+                signed_fields_sha256=data["signed_fields_sha256"],
+            )
+        except KeyError as exc:
+            raise ValueError(
+                f"missing required signed attestation field: {exc.args[0]}"
+            ) from exc

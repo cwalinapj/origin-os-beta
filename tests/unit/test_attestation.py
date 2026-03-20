@@ -2,6 +2,7 @@
 
 from origin_protocol_core.manifest import ManifestV1
 from origin_attestation import (
+    LocalEd25519Signer,
     SUPPORTED_SIGNATURE_ALGS,
     build_attestation_payload,
     sign_attestation,
@@ -40,7 +41,7 @@ def test_attestation_sign_and_verify():
     chain = make_chain()
     keypair = generate_keypair()
     payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")
-    signature = sign_attestation(payload, keypair.private_bytes)
+    signature = sign_attestation(payload, LocalEd25519Signer(keypair.private_bytes))
     assert verify_attestation_signature(payload, signature, keypair.public_bytes)
 
 
@@ -49,7 +50,7 @@ def test_attestation_verify_wrong_key_fails():
     keypair1 = generate_keypair()
     keypair2 = generate_keypair()
     payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")
-    signature = sign_attestation(payload, keypair1.private_bytes)
+    signature = sign_attestation(payload, LocalEd25519Signer(keypair1.private_bytes))
     assert not verify_attestation_signature(payload, signature, keypair2.public_bytes)
 
 
@@ -57,10 +58,18 @@ def test_attestation_verify_tampered_payload_fails():
     chain = make_chain()
     keypair = generate_keypair()
     payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")
-    signature = sign_attestation(payload, keypair.private_bytes)
+    signature = sign_attestation(payload, LocalEd25519Signer(keypair.private_bytes))
     # Tamper with payload
     payload.step_count = 999
     assert not verify_attestation_signature(payload, signature, keypair.public_bytes)
+
+
+def test_sign_attestation_accepts_raw_private_key_bytes():
+    chain = make_chain()
+    keypair = generate_keypair()
+    payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")
+    signature = sign_attestation(payload, keypair.private_bytes)
+    assert verify_attestation_signature(payload, signature, keypair.public_bytes)
 
 
 def test_supported_signature_algs_exposes_ed25519():

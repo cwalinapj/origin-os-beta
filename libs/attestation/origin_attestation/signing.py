@@ -5,10 +5,9 @@ from __future__ import annotations
 from typing import Protocol, TYPE_CHECKING
 
 import hashlib
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from origin_protocol_core.canonical import canonical_json
 
-from .key_management import derive_key_id
+from .signers import LocalEd25519Signer, Signer
 from .payloads import AttestationPayload
 from .types import SignedAttestation
 
@@ -32,18 +31,19 @@ class RunChainStore(Protocol):
         ...
 
 
-def sign_attestation(payload: AttestationPayload, private_key_bytes: bytes) -> bytes:
-    """Sign *payload* with an Ed25519 private key.
+def sign_attestation(payload: AttestationPayload, signer: Signer | bytes) -> bytes:
+    """Sign *payload* with a signer.
 
-    *private_key_bytes* must be 32 bytes of raw Ed25519 seed material.
+    If *signer* is raw 32-byte Ed25519 seed material, a local signer is used.
 
     Returns the 64-byte raw Ed25519 signature.
     """
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    active_signer = _as_signer(signer)
+    return active_signer.sign(payload)
 
-    private_key = Ed25519PrivateKey.from_private_bytes(private_key_bytes)
-    message = canonical_json(payload.to_dict()).encode("utf-8")
-    return private_key.sign(message)
+
+def _as_signer(signer: Signer | bytes) -> Signer:
+    return LocalEd25519Signer(signer) if isinstance(signer, bytes) else signer
 
 
 def audit_and_sign_attestation(
@@ -52,7 +52,7 @@ def audit_and_sign_attestation(
     chain_store: RunChainStore,
     attestation_store: AttestationStore,
     timestamp_utc: str,
-    private_key_bytes: bytes,
+    signer: Signer | bytes,
 ) -> dict:
     """Load, verify, build, sign, and persist a signed attestation for a run."""
     from .payloads import build_attestation_payload
@@ -61,20 +61,16 @@ def audit_and_sign_attestation(
     manifests = chain_store.list_run(run_id)
     verify_run_or_raise(run_id, manifests)
     payload = build_attestation_payload(manifests, timestamp_utc=timestamp_utc)
-    signature = sign_attestation(payload, private_key_bytes)
+    active_signer = _as_signer(signer)
+    signature = sign_attestation(payload, active_signer)
     signed_fields_sha256 = hashlib.sha256(
         canonical_json(payload.to_dict()).encode("utf-8")
     ).hexdigest()
-    public_key_bytes = (
-        Ed25519PrivateKey.from_private_bytes(private_key_bytes)
-        .public_key()
-        .public_bytes_raw()
-    )
     signed_attestation = SignedAttestation(
         payload=payload,
         signature=signature.hex(),
         signature_alg="ed25519",
-        key_id=derive_key_id(public_key_bytes),
+        key_id=active_signer.key_id,
         signed_fields_sha256=signed_fields_sha256,
     )
     signed_attestation_dict = signed_attestation.to_dict()

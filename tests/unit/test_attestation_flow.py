@@ -3,6 +3,7 @@
 import pytest
 from origin_attestation import (
     AttestationPayload,
+    LocalEd25519Signer,
     audit_and_sign_attestation,
     verify_attestation_signature,
 )
@@ -54,7 +55,7 @@ def test_audit_and_sign_attestation_successful_sign_store() -> None:
         chain_store=chain_store,
         attestation_store=attestation_store,
         timestamp_utc="2026-01-01T00:02:00Z",
-        private_key_bytes=keypair.private_bytes,
+        signer=LocalEd25519Signer(keypair.private_bytes),
     )
 
     assert attestation_store.by_run_id[run_id] == signed
@@ -81,7 +82,7 @@ def test_audit_and_sign_attestation_rejects_invalid_chain() -> None:
             chain_store=chain_store,
             attestation_store=attestation_store,
             timestamp_utc="2026-01-01T00:02:00Z",
-            private_key_bytes=keypair.private_bytes,
+            signer=LocalEd25519Signer(keypair.private_bytes),
         )
 
     assert run_id not in attestation_store.by_run_id
@@ -101,9 +102,30 @@ def test_attestation_signature_verification_roundtrip() -> None:
         chain_store=chain_store,
         attestation_store=attestation_store,
         timestamp_utc="2026-01-01T00:02:00Z",
-        private_key_bytes=keypair.private_bytes,
+        signer=LocalEd25519Signer(keypair.private_bytes),
     )
     payload = AttestationPayload.from_dict(signed["payload"])
     signature = bytes.fromhex(signed["signature"])
 
+    assert verify_attestation_signature(payload, signature, keypair.public_bytes)
+
+
+def test_audit_and_sign_attestation_accepts_raw_private_key_bytes() -> None:
+    run_id = "run-attestation-flow-bytes"
+    chain_store = InMemoryChainStore()
+    attestation_store = InMemoryAttestationStore()
+    keypair = generate_keypair()
+
+    step0 = _step(run_id=run_id, step_index=0, previous_step_digest=None)
+    chain_store.append(step0)
+
+    signed = audit_and_sign_attestation(
+        run_id=run_id,
+        chain_store=chain_store,
+        attestation_store=attestation_store,
+        timestamp_utc="2026-01-01T00:02:00Z",
+        signer=keypair.private_bytes,
+    )
+    payload = AttestationPayload.from_dict(signed["payload"])
+    signature = bytes.fromhex(signed["signature"])
     assert verify_attestation_signature(payload, signature, keypair.public_bytes)

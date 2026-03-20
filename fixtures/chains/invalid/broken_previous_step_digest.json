@@ -4,8 +4,13 @@
     "step_index": 0,
     "agent_id": "agent-alpha",
     "action": "fetch_data",
-    "inputs": {"url": "https://example.com/data"},
-    "outputs": {"status": 200, "rows": 42},
+    "inputs": {
+      "url": "https://example.com/data"
+    },
+    "outputs": {
+      "status": 200,
+      "rows": 42
+    },
     "timestamp_utc": "2026-01-01T00:00:00Z",
     "previous_step_digest": null,
     "metadata": {}
@@ -15,8 +20,12 @@
     "step_index": 1,
     "agent_id": "agent-alpha",
     "action": "process_data",
-    "inputs": {"rows": 42},
-    "outputs": {"summary": "ok"},
+    "inputs": {
+      "rows": 42
+    },
+    "outputs": {
+      "summary": "ok"
+    },
     "timestamp_utc": "2026-01-01T00:00:01Z",
     "previous_step_digest": "0000000000000000000000000000000000000000000000000000000000000000",
     "metadata": {}

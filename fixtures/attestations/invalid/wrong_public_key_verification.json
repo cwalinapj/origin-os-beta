@@ -1,0 +1,13 @@
+{
+  "payload": {
+    "run_id": "run-attest-fixture",
+    "step_count": 2,
+    "first_step_digest": "289a56fb540234c7817a15f622a084f08e563d2432f18a80c6af96b8f40fd2b0",
+    "last_step_digest": "b8af3d8e80c9d54546731ab2ced48164fd3d2788ddf823eb53ceaf7f45b3d875",
+    "chain_digest": "b25243f4b42ce96f8561f4acb8f8355ec96566f37c553404af8444f4fdf6df6b",
+    "timestamp_utc": "2026-01-01T00:02:00Z"
+  },
+  "signature": "75cdf63c58b10ff85732851771f8d74da5f06443cc1b27c394d4d55e125154db75f0d20879ab3bf01f7498f8141d819ea4038a25b1f61869ee20c04fea1ff90a",
+  "signature_alg": "ed25519",
+  "public_key": "cb721519d306172cfa0ebf3af75761c21b79767ec1518446946be55c3f18ce6a"
+}

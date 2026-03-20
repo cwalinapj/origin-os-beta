@@ -5,6 +5,7 @@ from .chain_store import ChainStore
 from .errors import OriginError, ManifestValidationError
 from .manifest import GENESIS, ManifestV1
 from .types import ChainVerificationSummary, ChainValidator, ValidationResult, Validator
+from .execution_harness import StepExecutionRecord, append_execution_step
 
 __all__ = [
     "GENESIS",
@@ -20,4 +21,8 @@ __all__ = [
     "ChainStore",
     "OriginError",
     "ManifestValidationError",
+    "StepExecutionRecord",
+    "append_execution_step",
+    "ChainValidator",
+    "ChainVerificationSummary",
 ]

@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 from origin_protocol_core.manifest import ManifestV1
+from origin_protocol_core.types import ChainVerificationSummary, StepVerificationReport
 
-from .reports import ChainVerificationSummary, StepVerificationReport
 from .validators_chain import run_chain_validators
 from .validators_step import run_step_validators
 

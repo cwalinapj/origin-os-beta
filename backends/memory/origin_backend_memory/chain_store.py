@@ -8,7 +8,7 @@ from origin_protocol_core.errors import ChainStoreError
 from origin_protocol_core.manifest import ManifestV1
 
 
-class MemoryChainStore:
+class InMemoryChainStore:
     """A non-persistent, in-memory :class:`~origin_protocol_core.ChainStore`.
 
     Suitable for unit tests and short-lived runs.  Not thread-safe.
@@ -49,3 +49,6 @@ class MemoryChainStore:
     def run_ids(self) -> list[str]:
         """Return all run IDs in the store."""
         return list(self._store.keys())
+
+
+MemoryChainStore = InMemoryChainStore

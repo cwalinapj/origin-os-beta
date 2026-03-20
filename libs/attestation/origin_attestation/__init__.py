@@ -1,7 +1,7 @@
 """Origin Attestation — build, sign, and verify chain attestations."""
 
 from .payloads import AttestationPayload, build_attestation_payload
-from .signing import sign_attestation
+from .signing import SUPPORTED_SIGNATURE_ALGS, sign_attestation
 from .verification import verify_attestation_signature
 from .key_management import (
     AgentSigningKey,
@@ -14,6 +14,7 @@ from .key_management import (
 __all__ = [
     "AttestationPayload",
     "build_attestation_payload",
+    "SUPPORTED_SIGNATURE_ALGS",
     "sign_attestation",
     "verify_attestation_signature",
     "AgentSigningKey",

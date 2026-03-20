@@ -6,6 +6,8 @@ from origin_protocol_core.canonical import canonical_json
 
 from .payloads import AttestationPayload
 
+SUPPORTED_SIGNATURE_ALGS = frozenset({"ed25519"})
+
 
 def sign_attestation(payload: AttestationPayload, private_key_bytes: bytes) -> bytes:
     """Sign *payload* with an Ed25519 private key.

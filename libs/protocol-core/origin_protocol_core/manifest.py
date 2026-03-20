@@ -9,6 +9,8 @@ from .canonical import canonical_digest, canonical_json
 from .errors import ManifestValidationError
 from .types import Digest, JsonDict
 
+GENESIS: Digest | None = None
+
 _REQUIRED_FIELDS = frozenset(
     {"run_id", "step_index", "agent_id", "action", "inputs", "outputs", "timestamp_utc"}
 )

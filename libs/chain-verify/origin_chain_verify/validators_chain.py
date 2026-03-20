@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from origin_protocol_core.manifest import ManifestV1
-
-from .reports import ValidationResult
+from origin_protocol_core.types import ChainValidator, ValidationResult
 
 
 def validate_hash_linkage(
@@ -42,10 +41,13 @@ def validate_chain_not_empty(manifests: list[ManifestV1]) -> ValidationResult:
 
 def run_chain_validators(manifests: list[ManifestV1]) -> list[ValidationResult]:
     """Run all chain-level validators and return the list of results."""
-    results = [
-        validate_chain_not_empty(manifests),
-        validate_run_id_consistency(manifests),
-    ]
+    results = [validator(manifests) for validator in CHAIN_VALIDATORS]
     for i in range(1, len(manifests)):
         results.append(validate_hash_linkage(manifests[i - 1], manifests[i]))
     return results
+
+
+CHAIN_VALIDATORS: list[ChainValidator] = [
+    validate_chain_not_empty,
+    validate_run_id_consistency,
+]

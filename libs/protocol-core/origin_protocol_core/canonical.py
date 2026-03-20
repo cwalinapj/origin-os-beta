@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from datetime import datetime
 from typing import Any
 
 
@@ -10,14 +11,35 @@ def canonical_json(obj: Any) -> str:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+def sha256_bytes(data: str | bytes) -> str:
+    """Return the lowercase hex SHA-256 digest of *data*."""
+    if isinstance(data, str):
+        data = data.encode("utf-8")
+    return hashlib.sha256(data).hexdigest()
+
+
 def sha256_hex(data: str | bytes) -> str:
     """Return the lowercase hex SHA-256 digest of *data*.
 
     Accepts a string (UTF-8 encoded) or raw bytes.
     """
-    if isinstance(data, str):
-        data = data.encode("utf-8")
-    return hashlib.sha256(data).hexdigest()
+    return sha256_bytes(data)
+
+
+def parse_rfc3339(ts: str) -> datetime:
+    """Parse an RFC3339 UTC timestamp string (supports trailing ``Z``)."""
+    return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+
+def is_hex_sha256(value: Any) -> bool:
+    """Return ``True`` if *value* is a valid 64-char lowercase SHA-256 hex string."""
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    value_lower = value.lower()
+    return (
+        all(c in "0123456789abcdef" for c in value_lower)
+        and value == value_lower
+    )
 
 
 def canonical_digest(obj: Any) -> str:

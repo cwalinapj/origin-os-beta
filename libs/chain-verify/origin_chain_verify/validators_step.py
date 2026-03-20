@@ -3,8 +3,7 @@
 from __future__ import annotations
 
 from origin_protocol_core.manifest import ManifestV1
-
-from .reports import ValidationResult
+from origin_protocol_core.types import ValidationResult, Validator
 
 
 def validate_required_fields(manifest: ManifestV1) -> ValidationResult:
@@ -55,3 +54,13 @@ def run_step_validators(manifest: ManifestV1, expected_index: int) -> list[Valid
         validate_first_step_has_no_previous(manifest),
         validate_subsequent_step_has_previous(manifest),
     ]
+
+
+INTEGRITY_VALIDATORS: list[Validator] = [
+    validate_required_fields,
+    validate_step_index,
+    validate_first_step_has_no_previous,
+    validate_subsequent_step_has_previous,
+]
+PROVENANCE_VALIDATORS: list[Validator] = []
+POLICY_VALIDATORS: list[Validator] = []

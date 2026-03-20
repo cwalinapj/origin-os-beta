@@ -1,13 +1,18 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "origin-crypto"
 version = "0.1.0"
-description = "Cryptographic primitives for Origin OS"
+description = "Cryptographic helpers for Origin OS Beta"
+readme = "../../README.md"
 requires-python = ">=3.11"
-dependencies = ["cryptography>=41"]
+license = { text = "MIT" }
+authors = [{ name = "Origin OS" }]
+dependencies = [
+  "cryptography>=42.0.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

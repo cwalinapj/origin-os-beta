@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Protocol
+from typing import Protocol, TYPE_CHECKING
 
 from origin_protocol_core.canonical import canonical_json
 
 from .payloads import AttestationPayload
+
+if TYPE_CHECKING:
+    from origin_protocol_core.manifest import ManifestV1
 
 SUPPORTED_SIGNATURE_ALGS = frozenset({"ed25519"})
 
@@ -15,6 +18,13 @@ class AttestationStore(Protocol):
     """Minimal persistence protocol for signed attestations."""
 
     def put_signed_attestation(self, run_id: str, signed_attestation: dict) -> None:
+        ...
+
+
+class RunChainStore(Protocol):
+    """Minimal run-chain read protocol needed by attestation flow."""
+
+    def list_run(self, run_id: str) -> list["ManifestV1"]:
         ...
 
 
@@ -35,7 +45,7 @@ def sign_attestation(payload: AttestationPayload, private_key_bytes: bytes) -> b
 def audit_and_sign_attestation(
     *,
     run_id: str,
-    chain_store,
+    chain_store: RunChainStore,
     attestation_store: AttestationStore,
     timestamp_utc: str,
     private_key_bytes: bytes,

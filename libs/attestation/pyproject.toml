@@ -1,15 +1,11 @@
 [build-system]
-requires = ["setuptools>=69", "wheel"]
+requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "origin-attestation"
 version = "0.1.0"
-description = "Attestation payloads and signing for Origin OS Beta"
-readme = "../../README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
-authors = [{ name = "Origin OS" }]
 dependencies = [
   "origin-protocol-core",
   "origin-crypto",

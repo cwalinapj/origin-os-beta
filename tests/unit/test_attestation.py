@@ -64,7 +64,7 @@ def test_attestation_verify_tampered_payload_fails():
     assert not verify_attestation_signature(payload, signature, keypair.public_bytes)
 
 
-def test_attestation_sign_with_raw_private_key_bytes_still_supported():
+def test_sign_attestation_accepts_raw_private_key_bytes():
     chain = make_chain()
     keypair = generate_keypair()
     payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")

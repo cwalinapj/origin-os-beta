@@ -38,10 +38,12 @@ def sign_attestation(payload: AttestationPayload, signer: Signer | bytes) -> byt
 
     Returns the 64-byte raw Ed25519 signature.
     """
-    active_signer = (
-        LocalEd25519Signer(signer) if isinstance(signer, bytes) else signer
-    )
+    active_signer = _as_signer(signer)
     return active_signer.sign(payload)
+
+
+def _as_signer(signer: Signer | bytes) -> Signer:
+    return LocalEd25519Signer(signer) if isinstance(signer, bytes) else signer
 
 
 def audit_and_sign_attestation(
@@ -59,9 +61,7 @@ def audit_and_sign_attestation(
     manifests = chain_store.list_run(run_id)
     verify_run_or_raise(run_id, manifests)
     payload = build_attestation_payload(manifests, timestamp_utc=timestamp_utc)
-    active_signer = (
-        LocalEd25519Signer(signer) if isinstance(signer, bytes) else signer
-    )
+    active_signer = _as_signer(signer)
     signature = sign_attestation(payload, active_signer)
     signed_fields_sha256 = hashlib.sha256(
         canonical_json(payload.to_dict()).encode("utf-8")

@@ -60,6 +60,8 @@ def test_audit_and_sign_attestation_successful_sign_store() -> None:
     assert attestation_store.by_run_id[run_id] == signed
     assert signed["signature_alg"] == "ed25519"
     assert signed["payload"]["run_id"] == run_id
+    assert "key_id" in signed
+    assert "signed_fields_sha256" in signed
 
 
 def test_audit_and_sign_attestation_rejects_invalid_chain() -> None:

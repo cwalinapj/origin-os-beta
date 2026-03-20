@@ -1,13 +1,16 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "origin-cli"
 version = "0.1.0"
-description = "CLI tools for Origin OS chain inspection and verification"
 requires-python = ">=3.11"
-dependencies = ["origin-protocol-core", "origin-chain-verify"]
+dependencies = [
+  "origin-protocol-core",
+  "origin-chain-verify",
+  "origin-attestation",
+]
 
 [project.scripts]
 origin-verify = "origin_cli.main:main"

@@ -1,62 +1,148 @@
-# origin-os-beta
+# Origin OS Beta
 
-Origin OS Beta is the next-generation core of Origin OS — a verifiable execution substrate for agent-driven workflows.
+Origin OS Beta is the next-generation core of Origin OS, focused on verifiable agent execution, execution storage protocols, and signed attestations.
 
-## Purpose
+It is designed for systems that:
+1. generate or modify code
+2. run it in isolated environments
+3. observe outputs and failures
+4. patch and retry
+5. preserve a tamper-evident execution history
 
-This repository implements:
-- **Canonical execution manifests** — deterministic, hash-addressable records of each agent step
-- **Cryptographic hash chains** — each step commits to the digest of the previous step
-- **Chain verification** — validate integrity and continuity of execution chains
-- **Signed attestations** — cryptographic proof that a run happened as recorded
-- **Pluggable chain-store backends** — in-memory (tests), SQLite (local), extensible to cloud
-- **Fixture-driven compatibility testing** — golden fixtures to guard protocol stability
+## Core focus
 
-## Core Concepts
+Origin OS Beta is centered on:
 
-| Concept | Description |
-|---|---|
-| `ManifestV1` | A single agent execution step record |
-| `digest` | SHA-256 of canonical JSON of a manifest |
-| `previous_step_digest` | Links this step to the prior step, forming a chain |
-| `ChainStore` | Protocol interface for reading/writing manifests |
-| `Attestation` | Ed25519-signed payload certifying a chain |
+- canonical execution manifests
+- cryptographic hash chains across steps
+- chain verification
+- provenance and policy validation
+- signed attestations
+- pluggable chain-store backends
+- artifact indexing, archival, and retention design
 
-## Repository Layout
+## Why this repo exists
 
-```
+The earlier Origin OS repository grew around service orchestration, tool integrations, and UI workflows.
+
+This repository starts from a different center of gravity:
+- execution integrity
+- replayability
+- auditability
+- storage protocols
+- verifiable agent behavior
+
+## Core concepts
+
+### Manifest
+A canonical record of one execution step.
+
+A manifest can include:
+- `run_id`
+- `step_id`
+- `sequence_no`
+- `agent_id`
+- runner, VM, and model metadata
+- timestamps
+- exit code
+- hashes of source, stdout, stderr, and results
+- `previous_step_digest`
+
+### Chain
+An ordered sequence of manifests linked by digest.
+
+### Verification
+Validation of:
+- structure
+- digest integrity
+- linkage
+- sequence consistency
+- timestamp consistency
+- provenance constraints
+- policy constraints
+
+### Attestation
+A signed summary of a completed run, suitable for external verification or registry anchoring.
+
+## Repository layout
+
+```text
 origin-os-beta/
-  libs/
-    protocol-core/    # ManifestV1, canonical JSON, ChainStore protocol
-    chain-verify/     # Step and chain validators, verify_chain()
-    attestation/      # Payload builder, sign, verify
-    crypto/           # Ed25519, fingerprints, Merkle helpers
-  backends/
-    memory/           # In-memory ChainStore (testing)
-    sqlite/           # SQLite-backed ChainStore (local dev)
-  tools/
-    cli/              # origin-verify CLI tool
-  tests/              # unit, integration, compatibility, e2e
-  fixtures/           # valid/invalid JSON fixture chains
-  specs/              # Protocol specifications
-  docs/               # Architecture and runbooks
-  schemas/            # JSON Schema definitions
+├── README.md
+├── LICENSE
+├── .gitignore
+├── .github/
+│   └── workflows/
+├── docs/
+│   ├── architecture/
+│   ├── protocols/
+│   ├── adr/
+│   └── runbooks/
+├── specs/
+│   ├── manifests/
+│   ├── chain-verification/
+│   ├── attestation/
+│   └── chain-store/
+├── schemas/
+│   ├── jsonschema/
+│   └── migrations/
+├── fixtures/
+│   ├── valid/
+│   ├── invalid/
+│   ├── chains/
+│   └── attestations/
+├── libs/
+│   ├── protocol-core/
+│   ├── chain-verify/
+│   ├── attestation/
+│   └── crypto/
+├── backends/
+│   ├── memory/
+│   ├── sqlite/
+│   └── postgres/
+├── tools/
+│   └── cli/
+└── tests/
+    ├── unit/
+    ├── integration/
+    ├── compatibility/
+    └── e2e/
 ```
 
-## Quick Start
+## Quick start
 
 ```bash
-# Install protocol-core in development mode
+# Install all libs in development mode
 pip install -e libs/protocol-core
-
-# Install chain-verify
+pip install -e libs/crypto
 pip install -e libs/chain-verify
+pip install -e libs/attestation
+pip install -e backends/memory
+pip install -e tools/cli
 
 # Run tests
 pytest tests/
+
+# Verify a fixture chain
+origin-verify verify fixtures/valid/chain_two_steps.json
 ```
 
-## Current Priorities
+## Implementation status
+
+| Component | Status |
+|---|---|
+| `libs/protocol-core` | Implemented — `ManifestV1`, canonical JSON, `ChainStore` protocol |
+| `libs/chain-verify` | Implemented — step/chain validators, `verify_chain()` |
+| `libs/attestation` | Implemented — Ed25519 sign/verify, payload builder |
+| `libs/crypto` | Implemented — key generation, fingerprints, Merkle root |
+| `backends/memory` | Implemented — in-memory store for testing |
+| `backends/sqlite` | Implemented — SQLite-backed store |
+| `tools/cli` | Implemented — `origin-verify verify` command |
+| `backends/postgres` | Placeholder |
+| `specs/` | Placeholder — stubs in place |
+| `docs/` | Placeholder — stubs in place |
+
+## Current priorities
 
 1. Stabilise `ManifestV1` schema and canonical digest
 2. Complete chain verification with full error reporting

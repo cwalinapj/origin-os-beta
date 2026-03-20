@@ -1,0 +1,89 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+dist/
+build/
+site/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+logs/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+vault/
+*.sqlite-wal
+*.sqlite-shm
+
+# SQLite / local storage
+*.db
+*.sqlite
+*.sqlite3
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# Coverage / test artifacts
+coverage.xml
+junit.xml
+test-results/
+playwright-report/
+
+# Build / generated docs
+docs/_build/
+*.generated.json
+
+# Terraform / infra
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Docker
+*.pid
+
+# Mac/Linux temp files
+.tmp/
+tmp/
+.cache/
+
+# Tooling outputs
+artifacts/
+out/

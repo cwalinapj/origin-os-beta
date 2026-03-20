@@ -1,9 +1,9 @@
 """Tests for in-memory backend."""
 
 import pytest
+from origin_backend_memory import InMemoryChainStore, MemoryChainStore
 from origin_protocol_core.errors import ChainStoreError
 from origin_protocol_core.manifest import ManifestV1
-from origin_backend_memory import MemoryChainStore
 
 
 def make_manifest(step_index: int, prev_digest: str | None) -> ManifestV1:
@@ -52,3 +52,7 @@ def test_run_ids():
     m0 = make_manifest(0, None)
     store.append(m0)
     assert "run-mem-test" in store.run_ids()
+
+
+def test_inmemory_alias_points_to_memory_store():
+    assert InMemoryChainStore is MemoryChainStore

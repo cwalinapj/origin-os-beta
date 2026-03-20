@@ -33,10 +33,12 @@ def parse_rfc3339(ts: str) -> datetime:
 
 def is_hex_sha256(value: Any) -> bool:
     """Return ``True`` if *value* is a valid 64-char lowercase SHA-256 hex string."""
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    value_lower = value.lower()
     return (
-        isinstance(value, str)
-        and len(value) == 64
-        and all(c in "0123456789abcdef" for c in value.lower())
+        all(c in "0123456789abcdef" for c in value_lower)
+        and value == value_lower
     )
 
 

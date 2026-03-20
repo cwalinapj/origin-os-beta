@@ -39,22 +39,15 @@ def validate_chain_not_empty(manifests: list[ManifestV1]) -> ValidationResult:
     return ValidationResult.ok("chain_not_empty")
 
 
-def validate_all_hash_linkages(manifests: list[ManifestV1]) -> ValidationResult:
-    """Verify pairwise hash linkage across the entire chain."""
-    for i in range(1, len(manifests)):
-        result = validate_hash_linkage(manifests[i - 1], manifests[i])
-        if not result.passed:
-            return result
-    return ValidationResult.ok("hash_linkage")
-
-
 def run_chain_validators(manifests: list[ManifestV1]) -> list[ValidationResult]:
     """Run all chain-level validators and return the list of results."""
-    return [validator(manifests) for validator in CHAIN_VALIDATORS]
+    results = [validator(manifests) for validator in CHAIN_VALIDATORS]
+    for i in range(1, len(manifests)):
+        results.append(validate_hash_linkage(manifests[i - 1], manifests[i]))
+    return results
 
 
 CHAIN_VALIDATORS: list[ChainValidator] = [
     validate_chain_not_empty,
     validate_run_id_consistency,
-    validate_all_hash_linkages,
 ]

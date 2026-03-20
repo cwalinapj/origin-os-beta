@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 
 from origin_protocol_core.errors import ChainStoreError
@@ -26,6 +27,10 @@ class SqliteChainStore:
     """
 
     def __init__(self, path: str = ":memory:") -> None:
+        if path != ":memory:":
+            parent = os.path.dirname(os.path.abspath(path))
+            if parent:
+                os.makedirs(parent, exist_ok=True)
         self._conn = sqlite3.connect(path, check_same_thread=False)
         self._conn.execute(_DDL)
         self._conn.commit()
@@ -42,7 +47,7 @@ class SqliteChainStore:
                 f"Expected step_index={expected_index} for run '{manifest.run_id}', "
                 f"got {manifest.step_index}"
             )
-        data = json.dumps(manifest.to_dict())
+        data = manifest.canonical_json()
         try:
             self._conn.execute(
                 "INSERT INTO manifests (run_id, step_index, data) VALUES (?, ?, ?)",

@@ -24,6 +24,7 @@ pub mod agent_key_registry {
         let key = &mut ctx.accounts.agent_key;
         key.owner_agent_id = owner_agent_id;
         key.key_id = key_id;
+        key.authority = ctx.accounts.authority.key();
         key.pubkey = pubkey;
         key.revoked = false;
         key.bump = ctx.bumps.agent_key;
@@ -80,6 +81,7 @@ pub mod agent_key_registry {
 pub struct RegisterKey<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
+    pub authority: Signer<'info>,
     #[account(
         init,
         payer = payer,
@@ -97,6 +99,7 @@ pub struct RevokeKey<'info> {
     pub authority: Signer<'info>,
     #[account(
         mut,
+        has_one = authority,
         seeds = [b"agent_key", owner_agent_id.as_bytes(), key_id.as_bytes()],
         bump = agent_key.bump
     )]
@@ -131,13 +134,14 @@ pub struct SubmitAttestation<'info> {
 pub struct AgentKey {
     pub owner_agent_id: String,
     pub key_id: String,
+    pub authority: Pubkey,
     pub pubkey: [u8; 32],
     pub revoked: bool,
     pub bump: u8,
 }
 
 impl AgentKey {
-    const SPACE: usize = (4 + 128) + (4 + 128) + 32 + 1 + 1;
+    const SPACE: usize = (4 + 128) + (4 + 128) + 32 + 32 + 1 + 1;
 }
 
 #[account]

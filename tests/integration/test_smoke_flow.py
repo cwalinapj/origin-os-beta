@@ -1,6 +1,7 @@
 """Integration smoke flow for verify + attestation pipeline."""
 
 from origin_attestation import (
+    LocalEd25519Signer,
     build_attestation_payload,
     sign_attestation,
     verify_attestation_signature,
@@ -39,5 +40,5 @@ def test_smoke_flow_end_to_end() -> None:
 
     keypair = generate_keypair()
     payload = build_attestation_payload(chain, timestamp_utc="2026-01-01T00:01:00Z")
-    signature = sign_attestation(payload, keypair.private_bytes)
+    signature = sign_attestation(payload, LocalEd25519Signer(keypair.private_bytes))
     assert verify_attestation_signature(payload, signature, keypair.public_bytes)

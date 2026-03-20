@@ -9,6 +9,7 @@ from .signing import (
     audit_and_sign_attestation,
     sign_attestation,
 )
+from .signers import LocalEd25519Signer, Signer
 from .verification import verify_attestation_signature, verify_run_or_raise
 from .key_management import (
     AgentSigningKey,
@@ -27,6 +28,8 @@ __all__ = [
     "RunChainStore",
     "audit_and_sign_attestation",
     "sign_attestation",
+    "Signer",
+    "LocalEd25519Signer",
     "verify_attestation_signature",
     "verify_run_or_raise",
     "AgentSigningKey",

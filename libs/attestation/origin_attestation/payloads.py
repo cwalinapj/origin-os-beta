@@ -33,6 +33,17 @@ class AttestationPayload:
             "timestamp_utc": self.timestamp_utc,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "AttestationPayload":
+        return cls(
+            run_id=data["run_id"],
+            step_count=data["step_count"],
+            first_step_digest=data["first_step_digest"],
+            last_step_digest=data["last_step_digest"],
+            chain_digest=data["chain_digest"],
+            timestamp_utc=data["timestamp_utc"],
+        )
+
 
 def build_attestation_payload(
     manifests: list[ManifestV1], timestamp_utc: str

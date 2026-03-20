@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from origin_protocol_core.canonical import canonical_json
 
 from .payloads import AttestationPayload
+
+if TYPE_CHECKING:
+    from origin_protocol_core.manifest import ManifestV1
 
 
 def verify_attestation_signature(
@@ -28,3 +33,12 @@ def verify_attestation_signature(
         return True
     except InvalidSignature:
         return False
+
+
+def verify_run_or_raise(run_id: str, manifests: list["ManifestV1"]) -> None:
+    """Run full chain verification for a run and raise on failure."""
+    from origin_chain_verify import verify_chain
+
+    summary = verify_chain(manifests)
+    if not summary.passed:
+        raise ValueError(f"attestation rejected: chain verification failed for run_id={run_id}")

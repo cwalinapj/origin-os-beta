@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://origin-os.dev/schemas/manifest-v1.json",
+  "title": "ManifestV1",
+  "description": "Schema for a single agent execution step manifest.",
+  "type": "object",
+  "required": ["run_id", "step_index", "agent_id", "action", "inputs", "outputs", "timestamp_utc"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "step_index": { "type": "integer", "minimum": 0 },
+    "agent_id": { "type": "string" },
+    "action": { "type": "string" },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object" },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "previous_step_digest": { "type": ["string", "null"] },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": false
+}

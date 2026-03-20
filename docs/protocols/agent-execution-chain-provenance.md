@@ -28,3 +28,21 @@ step-to-step digest linkage.
 Attestations are signed with Ed25519. Verifiers must bind the attestation key to
 its expected owner identity (for example through an external key registry) so a
 payload cannot claim one identity while being signed by an unrelated key.
+
+## Solana registry integration boundary (spec-only)
+
+Origin defines a stable integration contract for resolving attestation keys from a
+Solana-backed registry, without requiring on-chain execution in this phase.
+
+Normative boundary:
+
+- The key identity tuple is `(owner_agent_id, key_id)`.
+- Verification resolves the active Ed25519 public key for that tuple before
+  verifying the signature.
+- The signed message must include identity-binding fields so the resolved tuple
+  and payload tuple cannot diverge.
+- PDA derivation conventions are fixed so future registry programs and off-chain
+  verifiers compute identical account addresses.
+
+The full normative spec lives in
+`specs/attestation/solana-registry.md`.

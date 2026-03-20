@@ -1,0 +1,33 @@
+[
+  {
+    "run_id": "run-abc123",
+    "step_index": 0,
+    "agent_id": "agent-alpha",
+    "action": "fetch_data",
+    "inputs": {
+      "url": "https://example.com/data"
+    },
+    "outputs": {
+      "status": 200,
+      "rows": 42
+    },
+    "timestamp_utc": "2026-01-01T00:00:00Z",
+    "previous_step_digest": null,
+    "metadata": {}
+  },
+  {
+    "run_id": "run-other999",
+    "step_index": 1,
+    "agent_id": "agent-alpha",
+    "action": "process_data",
+    "inputs": {
+      "rows": 42
+    },
+    "outputs": {
+      "summary": "ok"
+    },
+    "timestamp_utc": "2026-01-01T00:00:01Z",
+    "previous_step_digest": "289a56fb540234c7817a15f622a084f08e563d2432f18a80c6af96b8f40fd2b0",
+    "metadata": {}
+  }
+]

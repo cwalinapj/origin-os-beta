@@ -2,6 +2,7 @@
 
 from origin_protocol_core.manifest import ManifestV1
 from origin_attestation import (
+    SUPPORTED_SIGNATURE_ALGS,
     build_attestation_payload,
     sign_attestation,
     verify_attestation_signature,
@@ -60,3 +61,7 @@ def test_attestation_verify_tampered_payload_fails():
     # Tamper with payload
     payload.step_count = 999
     assert not verify_attestation_signature(payload, signature, keypair.public_bytes)
+
+
+def test_supported_signature_algs_exposes_ed25519():
+    assert "ed25519" in SUPPORTED_SIGNATURE_ALGS

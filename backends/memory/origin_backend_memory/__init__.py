@@ -1,5 +1,5 @@
 """Origin Backend Memory — in-memory ChainStore for testing."""
 
-from .chain_store import MemoryChainStore
+from .chain_store import InMemoryChainStore, MemoryChainStore
 
-__all__ = ["MemoryChainStore"]
+__all__ = ["InMemoryChainStore", "MemoryChainStore"]

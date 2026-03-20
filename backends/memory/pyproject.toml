@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "origin-backend-memory"
+version = "0.1.0"
+description = "In-memory ChainStore backend for Origin OS (testing)"
+requires-python = ">=3.11"
+dependencies = ["origin-protocol-core"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["origin_backend_memory*"]

@@ -108,3 +108,48 @@ origin-os-beta/
     ├── compatibility/
     └── e2e/
 ```
+
+## Quick start
+
+```bash
+# Install all libs in development mode
+pip install -e libs/protocol-core
+pip install -e libs/crypto
+pip install -e libs/chain-verify
+pip install -e libs/attestation
+pip install -e backends/memory
+pip install -e tools/cli
+
+# Run tests
+pytest tests/
+
+# Verify a fixture chain
+origin-verify verify fixtures/valid/chain_two_steps.json
+```
+
+## Implementation status
+
+| Component | Status |
+|---|---|
+| `libs/protocol-core` | Implemented — `ManifestV1`, canonical JSON, `ChainStore` protocol |
+| `libs/chain-verify` | Implemented — step/chain validators, `verify_chain()` |
+| `libs/attestation` | Implemented — Ed25519 sign/verify, payload builder |
+| `libs/crypto` | Implemented — key generation, fingerprints, Merkle root |
+| `backends/memory` | Implemented — in-memory store for testing |
+| `backends/sqlite` | Implemented — SQLite-backed store |
+| `tools/cli` | Implemented — `origin-verify verify` command |
+| `backends/postgres` | Placeholder |
+| `specs/` | Placeholder — stubs in place |
+| `docs/` | Placeholder — stubs in place |
+
+## Current priorities
+
+1. Stabilise `ManifestV1` schema and canonical digest
+2. Complete chain verification with full error reporting
+3. Add SQLite backend with migration support
+4. Publish fixture compatibility test suite
+5. CLI tool for chain inspection and verification
+
+## License
+
+MIT — see [LICENSE](LICENSE)

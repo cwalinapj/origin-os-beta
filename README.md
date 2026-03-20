@@ -1,8 +1,8 @@
 # Origin OS Beta
 
-Origin OS Beta is the next-generation core of Origin OS: a platform for verifiable agent execution, execution storage protocols, and signed attestations.
+Origin OS Beta is the next-generation core of Origin OS, focused on verifiable agent execution, execution storage protocols, and signed attestations.
 
-It is being designed for systems that:
+It is designed for systems that:
 1. generate or modify code
 2. run it in isolated environments
 3. observe outputs and failures
@@ -13,12 +13,12 @@ It is being designed for systems that:
 
 Origin OS Beta is centered on:
 
-- execution manifests
+- canonical execution manifests
 - cryptographic hash chains across steps
 - chain verification
 - provenance and policy validation
 - signed attestations
-- chain-store backends
+- pluggable chain-store backends
 - artifact indexing, archival, and retention design
 
 ## Why this repo exists
@@ -42,7 +42,7 @@ A manifest can include:
 - `step_id`
 - `sequence_no`
 - `agent_id`
-- runner / VM / model metadata
+- runner, VM, and model metadata
 - timestamps
 - exit code
 - hashes of source, stdout, stderr, and results
@@ -70,7 +70,9 @@ A signed summary of a completed run, suitable for external verification or regis
 origin-os-beta/
 ├── README.md
 ├── LICENSE
+├── .gitignore
 ├── .github/
+│   └── workflows/
 ├── docs/
 │   ├── architecture/
 │   ├── protocols/
@@ -98,57 +100,11 @@ origin-os-beta/
 │   ├── memory/
 │   ├── sqlite/
 │   └── postgres/
-├── services/
 ├── tools/
+│   └── cli/
 └── tests/
-
-
-Planned library boundaries
-	•	libs/protocol-core/ — manifests, shared types, canonicalization
-	•	libs/chain-verify/ — step and chain validators, verification engine
-	•	libs/attestation/ — attestation payloads, signing, verification
-	•	libs/crypto/ — Ed25519 helpers, fingerprints, Merkle utilities
-	•	backends/ — chain-store implementations
-
-Verification model
-
-Each execution step is sealed into a canonical manifest and linked to the previous step digest.
-
-This makes a run:
-	•	replayable
-	•	tamper-evident
-	•	attributable
-	•	auditable
-
-Verification is expected at two levels:
-	•	append-time validation at the persistence boundary
-	•	full-chain audit verification before attestation
-
-Attestation model
-
-Completed runs can be reduced to a compact attestation payload and signed with Ed25519.
-
-This is intended to support:
-	•	external verification
-	•	registry anchoring
-	•	compact proof of a full execution trace without publishing every step
-
-Current priorities
-	•	stabilize ManifestV1
-	•	finalize chain verification behavior
-	•	implement signed attestation flow
-	•	define ChainStore backends
-	•	add valid/invalid fixtures
-	•	build compatibility and audit tests
-
-Contributing
-
-For protocol changes, please include:
-	•	spec updates
-	•	schema updates where applicable
-	•	fixtures for valid and invalid cases
-	•	tests for verification and compatibility behavior
-
-Status
-
-Early active development.
+    ├── unit/
+    ├── integration/
+    ├── compatibility/
+    └── e2e/
+```

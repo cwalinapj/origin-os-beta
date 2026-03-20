@@ -1,13 +1,20 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "origin-attestation"
 version = "0.1.0"
-description = "Attestation payload builder and Ed25519 sign/verify for Origin OS"
+description = "Attestation payloads and signing for Origin OS Beta"
+readme = "../../README.md"
 requires-python = ">=3.11"
-dependencies = ["origin-protocol-core", "origin-crypto", "cryptography>=41"]
+license = { text = "MIT" }
+authors = [{ name = "Origin OS" }]
+dependencies = [
+  "origin-protocol-core",
+  "origin-crypto",
+  "cryptography>=42.0.0",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]

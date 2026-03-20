@@ -6,8 +6,8 @@ This document describes the behavior and intended use of the built-in `ChainStor
 
 | Backend | Persistence | Ordering assumptions | Concurrency / thread-safety | Intended use |
 | --- | --- | --- | --- | --- |
-| `InMemoryChainStore` (`MemoryChainStore`) | Non-persistent. Data lives only in process memory and is lost on process exit. | Appends must be contiguous per `run_id` (`step_index` must be exactly the next index, starting at `0`). `list_run()` returns manifests in step order. | **Not thread-safe**. No locking is used around internal state. | Unit tests, local experiments, and short-lived single-process runs. |
-| `SqliteChainStore` | Persistent when using a filesystem path. Non-persistent when using `":memory:"`. | Same contiguous append rule (`step_index == len(existing run)`), and `list_run()` is returned ordered by `step_index`. | A single SQLite connection is opened with `check_same_thread=False`, but the backend does not provide application-level locking. Concurrent writers should use external synchronization. | Local development, single-node deployments, and test scenarios that need optional durability. |
+| `InMemoryChainStore` (canonical; `MemoryChainStore` is an alias) | Non-persistent. Data lives only in process memory and is lost on process exit. | Appends must be contiguous per `run_id` (`step_index` must be exactly the next index, starting at `0`). `list_run()` returns manifests in step order. | **Not thread-safe**. No locking is used around internal state. | Unit tests, local experiments, and short-lived single-process runs. |
+| `SqliteChainStore` | Persistent when using a filesystem path. Non-persistent when using `":memory:"`. | Same contiguous append rule (`step_index` must equal the number of manifests already stored for that `run_id`), and `list_run()` is returned ordered by `step_index`. | A single SQLite connection is opened with `check_same_thread=False`, but the backend does not provide application-level locking. Concurrent writers should use external synchronization. | Local development, single-node deployments, and test scenarios that need optional durability. |
 
 ## Detailed guarantees and limitations
 

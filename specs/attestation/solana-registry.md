@@ -65,8 +65,8 @@ Verifier requirement:
 
 ## 4. PDA seed convention
 
-For compatibility with the current Solana registry program shape, the `agent_key`
-PDA MUST be derived from:
+For cross-implementation compatibility, the `agent_key` PDA MUST be derived
+from:
 
 - static seed prefix: `b"agent_key"`
 - `sha256(owner_agent_id UTF-8 bytes)`
@@ -79,7 +79,7 @@ In notation:
 Notes:
 
 - The hashed component convention is normative for this boundary.
-- Raw unhashed `owner_agent_id`/`key_id` seeds are out of spec.
+- Raw unhashed `owner_agent_id`/`key_id` seeds MUST NOT be used.
 - Future on-chain implementations MUST preserve this seed convention for
   cross-implementation compatibility.
 
